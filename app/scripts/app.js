@@ -12,8 +12,7 @@ if (window && window.config) {
     env = window.config;
 }
 
-var app = angular.module('apiExplorerApp', [ 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular.filter', 'environment' ]).config(
-
+var app = angular.module('apiExplorerApp', [ 'ngAnimate', 'ngCookies', 'ngResource', 'ngRoute', 'ngSanitize', 'ngTouch', 'angular.filter', 'angularModalService', 'environment', 'base64' ]).config(
 		function($compileProvider, $routeProvider, $httpProvider, envServiceProvider, $logProvider) {
 
           // Disable debug info
@@ -29,7 +28,8 @@ var app = angular.module('apiExplorerApp', [ 'ngAnimate', 'ngCookies', 'ngResour
               controller : 'ApisListCtrl'
           }).when('/apis/:id?', {
               templateUrl : 'views/apis/detail.html',
-              controller : 'ApisDetailCtrl'
+              controller : 'ApisDetailCtrl',
+              reloadOnSearch: false
           }).otherwise({
               redirectTo : '/apis'
           });
@@ -54,6 +54,9 @@ app.run(function($rootScope, $window) {
       if (!$rootScope.settings.currentPath.endsWith("/")) {
           $rootScope.settings.currentPath += "/";
       }
+      //console.log("$window.apiExplorer.currentPath='" + $window.apiExplorer.currentPath + "'");
+      //console.log("$window.location.pathname='" + $window.location.pathname + "'");
+      //console.log("$rootScope.settings.currentPath='" + $rootScope.settings.currentPath + "'");
 
       // Determine the "endpoint" used for loading remote APIs
       $rootScope.settings.remoteApisEndpoint =  env.remoteApiEndPoint;
@@ -79,6 +82,10 @@ app.run(function($rootScope, $window) {
 
       // text displayed above the API list
       $rootScope.settings.apiListHeaderText = env.apiListHeaderText;
+
+      // sso
+      $rootScope.settings.ssoEnabled = env.ssoEnabled;
+      $rootScope.settings.authApiEndPoint = env.authApiEndPoint;
 
   };
 
